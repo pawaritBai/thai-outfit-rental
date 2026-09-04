@@ -1,0 +1,27 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('issues', function (Blueprint $table) {
+            $table->id();
+            $table->integer('user_id');
+            $table->foreign('user_id')->references('user_id')->on('Users')->onDelete('cascade');
+            $table->text('title');
+            $table->text('description');
+            $table->text('reply');
+            $table->enum('status', ['reported', 'in_progress', 'fixed']); // สถานะการแก้ไขปัญหา
+            $table->timestamps();
+        });
+    }
+    
+    public function down(): void
+    {
+        Schema::dropIfExists('issues');
+    }
+};
