@@ -146,6 +146,7 @@ class OutfitController extends Controller
     
         return view('shopowner.outfits.create', compact('categories', 'shop', 'sizes', 'colors'));
     }    
+    
     public function store(Request $request)
     {
         $validated = $request->validate([
