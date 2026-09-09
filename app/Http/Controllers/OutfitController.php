@@ -186,33 +186,31 @@ class OutfitController extends Controller
     
         // Create outfit without sizes and colors
         $outfit = ThaiOutfit::create($validated);
-    
-        // Attach categories
-        if ($outfit) {
-            foreach ($request->categories as $categoryId) {
-                $outfitCategory = new ThaiOutfitCategory();
-                $outfitCategory->outfit_id = $outfit->outfit_id;
-                $outfitCategory->category_id = $categoryId;
-                $outfitCategory->save();
-            }
         
-            // Add size and color combinations
-            if (isset($request->sizes) && isset($request->colors) && isset($request->amount)) {
-                foreach ($request->sizes as $sizeIndex => $sizeId) {
-                    foreach ($request->colors as $colorIndex => $colorId) {
-                        $key = $sizeId . '_' . $colorId;
-                        if (isset($request->amount[$key]) && $request->amount[$key] > 0) {
-                            ThaiOutfitSizeAndColor::create([
-                                'outfit_id' => $outfit->outfit_id,
-                                'size_id' => $sizeId,
-                                'color_id' => $colorId,
-                                'amount' => $request->amount[$key]
-                            ]);
-                        }
+        foreach ($request->categories as $categoryId) {
+            $outfitCategory = new ThaiOutfitCategory();
+            $outfitCategory->outfit_id = $outfit->outfit_id;
+            $outfitCategory->category_id = $categoryId;
+            $outfitCategory->save();
+        }
+    
+        // Add size and color combinations
+        if (isset($request->sizes) && isset($request->colors) && isset($request->amount)) {
+            foreach ($request->sizes as $sizeIndex => $sizeId) {
+                foreach ($request->colors as $colorIndex => $colorId) {
+                    $key = $sizeId . '_' . $colorId;
+                    if (isset($request->amount[$key]) && $request->amount[$key] > 0) {
+                        ThaiOutfitSizeAndColor::create([
+                            'outfit_id' => $outfit->outfit_id,
+                            'size_id' => $sizeId,
+                            'color_id' => $colorId,
+                            'amount' => $request->amount[$key]
+                        ]);
                     }
                 }
             }
         }
+        
     
         return redirect()->route('shopowner.outfits.index')
             ->with('success', 'ชุดถูกเพิ่มเรียบร้อยแล้ว');
@@ -671,7 +669,7 @@ class OutfitController extends Controller
  * Display outfits filtered by category.
  *
  * @param  int  $category
- * @return \Illuminate\Http\Response
+ * @return \Illuminate\View\View
  */
 public function byCategory($category)
 {

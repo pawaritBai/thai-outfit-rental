@@ -166,9 +166,13 @@ class StaffController extends Controller
     {
         // กำหนดค่าเริ่มต้นเป็น Daily
         $period = $request->input('period', 'daily');
+        if (!in_array($period, ['daily', 'weekly', 'monthly'], true)) {
+            $period = 'daily';
+        }
         // สร้างตัวแปรไว้เก็บค่า id ของ user
         $user_id = Auth::id();
-
+        $earningsPerPeriod = [];
+        $earningsPerDay = null;
         // กำหนดช่วงเวลาเริ่มต้นและสิ้นสุดสำหรับแต่ละช่วงเวลา
         $date = Carbon::now('Asia/Bangkok');
 

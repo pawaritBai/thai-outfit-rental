@@ -43,4 +43,9 @@ class Shop extends Model
     {
         return $this->hasMany(Booking::class, 'shop_id', 'shop_id');
     }
+
+    public function outfits()
+    {
+        return $this->hasMany(ThaiOutfit::class, 'shop_id', 'shop_id');
+    }
 }

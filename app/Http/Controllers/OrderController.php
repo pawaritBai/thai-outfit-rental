@@ -47,7 +47,6 @@ class OrderController extends Controller
         $customerAddress = CustomerAddress::with(['address'])
                          ->where('customer_id', Auth::id())
                          ->get();
-        dd($customerAddress);
         // ดึงโปรโมชั่นที่กำลังใช้งานได้
         $shop = null;
         $activePromotion = null;
@@ -129,6 +128,7 @@ class OrderController extends Controller
     
             // ✅ วนลูปสร้าง Booking สำหรับแต่ละกลุ่ม
             $bookings = [];
+            $booking = null;
             foreach ($groupedItems as $groupKey => $groupItems) {
                 [$shop_id, $reservation_date] = explode('|', $groupKey);
     
@@ -264,6 +264,10 @@ class OrderController extends Controller
                         ]);
                     }
                 }
+            }
+
+            if (!$booking) {                       
+                throw new \Exception('ไม่มีรายการสินค้าให้สร้างการจอง');
             }
     
             DB::commit();

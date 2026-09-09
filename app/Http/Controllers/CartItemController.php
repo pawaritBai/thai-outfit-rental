@@ -200,10 +200,10 @@ public function addToCart(Request $request)
             ->where('size_id', $cartItem->size_id)
             ->where('color_id', $cartItem->color_id)
             // ->where('status', 'INUSE')
-            ->first();
+            ->first(); 
 
-        if (!$sizeAndColor || $sizeAndColor->amount === null) {
-            return response()->json(['success' => false, 'message' => 'ไม่พบข้อมูลสต็อกสินค้า'], 404);
+        if (!$sizeAndColor || $sizeAndColor->amount <= 0) {
+            return response()->json(['success' => false, 'message' => 'สินค้าหมดสต็อก'], 404);
         }
 
         if ($request->quantity > $sizeAndColor->amount) {

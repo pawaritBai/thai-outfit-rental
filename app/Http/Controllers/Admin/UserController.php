@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 
 class UserController extends Controller
 {
@@ -126,37 +128,37 @@ class UserController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
-{
-    $user = User::findOrFail($id);
-    
-    $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => [
-            'required',
-            'string',
-            'email',
-            'max:255',
-            Rule::unique('users')->ignore($user->user_id, 'user_id'),
-        ],
-        'phone' => 'required|string|max:15',
-        'userType' => 'required|string',
-        'status' => 'required|string|in:active,inactive',
-    ]);
-    
-    $user->fill($validated);
-    $user->save();
-    
-    // Check if request is AJAX
-    if ($request->ajax() || $request->has('is_ajax')) {
-        return response()->json(['success' => true, 'message' => 'User updated successfully']);
+    {
+        $user = User::findOrFail($id);
+        
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($user->user_id, 'user_id'),
+            ],
+            'phone' => 'required|string|max:15',
+            'userType' => 'required|string',
+            'status' => 'required|string|in:active,inactive',
+        ]);
+        
+        $user->fill($validated);
+        $user->save();
+        
+        // Check if request is AJAX
+        if ($request->ajax() || $request->has('is_ajax')) {
+            return response()->json(['success' => true, 'message' => 'User updated successfully']);
+        }
+        
+        // Normal redirect for non-AJAX requests
+        return redirect()->route('admin.dashboard')->with('success', 'User updated successfully');
     }
-    
-    // Normal redirect for non-AJAX requests
-    return redirect()->route('admin.dashboard')->with('success', 'User updated successfully');
-}
 
     /**
      * Remove the specified user from storage.
