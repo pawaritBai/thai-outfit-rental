@@ -53,7 +53,7 @@ class IssueController extends Controller
 
 
         if ($request->hasFile('file')) {
-            $filename = Str::random(40) . '.' . $request->file('file')->getClientOriginalExtension();
+            $filename = Str::random(40) . '.' . $request->file('file')->extension();
             $request->file('file')->move(public_path('images/issue'), $filename);
             $filePath = 'images/issue/' . $filename;
         } else {
@@ -190,7 +190,7 @@ class IssueController extends Controller
 
         $filePath = null;
         if ($request->hasFile('file')) {
-            $filename = Str::random(40) . '.' . $request->file('file')->getClientOriginalExtension();
+            $filename = Str::random(40) . '.' . $request->file('file')->extension();
             $request->file('file')->move(public_path('images/issue'), $filename);
             $filePath = 'images/issue/' . $filename;
         }
@@ -255,7 +255,7 @@ class IssueController extends Controller
 
         $filePath = null;
         if ($request->hasFile('file')) {
-            $filename = Str::random(40) . '.' . $request->file('file')->getClientOriginalExtension();
+            $filename = Str::random(40) . '.' . $request->file('file')->extension();
             $request->file('file')->move(public_path('images/issue'), $filename);
             $filePath = 'images/issue/' . $filename;
         }

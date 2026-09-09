@@ -179,7 +179,7 @@ class OutfitController extends Controller
     
         // Handle image upload
         if ($request->hasFile('image')) {
-            $newFilename = Str::random(40) . '.' . $request->file('image')->getClientOriginalExtension();
+            $newFilename = Str::random(40) . '.' . $request->file('image')->extension();
             $request->file('image')->move(public_path('images/outfits'), $newFilename);
             $validated['image'] = 'images/outfits/' . $newFilename;
         }
@@ -281,7 +281,7 @@ class OutfitController extends Controller
             }
         
             // Generate random filename
-            $filename = Str::random(40) . '.' . $request->file('image')->getClientOriginalExtension();
+            $filename = Str::random(40) . '.' . $request->file('image')->extension();
         
             // Move file to public directory
             $request->file('image')->move(public_path('images/outfits'), $filename);
@@ -591,7 +591,7 @@ class OutfitController extends Controller
             }
         
             // Generate random filename
-            $filename = Str::random(40) . '.' . $request->file('image')->getClientOriginalExtension();
+            $filename = Str::random(40) . '.' . $request->file('image')->extension();
         
             // Move file to public directory
             $request->file('image')->move(public_path('images/outfits'), $filename);

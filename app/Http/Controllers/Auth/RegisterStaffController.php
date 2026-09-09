@@ -42,7 +42,7 @@ class RegisterStaffController extends Controller
             $filename = Str::random(40) . '.' . $request->file('identity_document')->getClientOriginalExtension();
 
             // ย้ายไฟล์ไปยังโฟลเดอร์ `public/images/profile-pic/`
-            $request->file('identity_document')->move(public_path('images/identity'), $filename);
+            $request->file('identity_document')->move(public_path('images/profile-pic/'), $filename);
 
             // บันทึกพาธของรูปใหม่
             $path = 'images/profile-pic/' . $filename;

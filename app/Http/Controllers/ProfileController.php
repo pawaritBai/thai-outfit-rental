@@ -84,7 +84,7 @@ class ProfileController extends Controller
             }
 
             // กำหนดชื่อไฟล์ใหม่แบบสุ่ม
-            $filename = Str::random(40) . '.' . $request->file('profilePicture')->getClientOriginalExtension();
+            $filename = Str::random(40) . '.' . $request->file('profilePicture')->extension();
 
             // ย้ายไฟล์ไปยังโฟลเดอร์ `public/images/profile-pic/`
             $request->file('profilePicture')->move(public_path('images/profile-pic'), $filename);
