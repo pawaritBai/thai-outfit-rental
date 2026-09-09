@@ -1,0 +1,21 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app
+
+    # เริ่มที่ level 4 สำหรับ legacy code — แก้ให้หมดก่อนค่อยไต่ขึ้น 5, 6, ...
+    level: 4
+
+    # เส้นทางที่ไม่ต้องวิเคราะห์
+    excludePaths:
+        - app/Http/Controllers/Auth/*   # โค้ด scaffold ของ Breeze (แก้ทีหลัง)
+
+    # ปิด rule ที่ noise เกินไปตอนเริ่ม (ค่อยเปิดทีหลัง)
+    ignoreErrors:
+        # Eloquent dynamic properties / relationships ที่ Larastan ยังตามไม่ทัน
+        - '#Access to an undefined property App\\Models\\.*#'
+        # relationExistence: false positive เยอะเพราะ relation ตั้ง FK ชื่อ non-standard
+        # (relation มีจริงในหลาย model) — เปิดกลับทีหลังตอน standardize relationship
+        - identifier: larastan.relationExistence
