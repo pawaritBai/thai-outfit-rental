@@ -317,7 +317,7 @@
         });
 
         // ส่งทั้งสองฟอร์มพร้อมกัน
-        document.getElementById('submitBothForms').addEventListener('click', function () {
+        document.getElementById('submitBothForms').addEventListener('click', async function () {
             if (!selectedDate) {
                 alert("กรุณาเลือกวันที่ก่อนสั่งซื้อ!");
                 return;
@@ -328,12 +328,26 @@
                 alert("กรุณากรอกจำนวนเพิ่มเติมให้ถูกต้อง");
                 return;
             }
+             
+            const stock = parseInt(document.getElementById('stockAmount').innerText) || 0;
 
-            document.getElementById('normalForm').submit();
+            async function sendForm(form){
+                await fetch(form.action, {
+                    method: 'POST',
+                    headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                    body: new FormData(form),
+                });
+            }
 
-            setTimeout(() => {
-                document.getElementById('overForm').submit();
-            }, 500);
+            if(stock > 0) {
+                await sendForm(document.getElementById('normalForm'));
+            }
+
+            await sendForm(document.getElementById('overForm'));
+
+            window.location.href = `{{ route('cartItem.allItem') }}`;
+
+
         });
     });
 </script>

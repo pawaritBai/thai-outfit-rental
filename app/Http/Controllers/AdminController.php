@@ -63,7 +63,7 @@ class AdminController extends Controller
             ->join('Shops', 'Bookings.shop_id', '=', 'Shops.shop_id')
             ->where('Bookings.purchase_date', 'LIKE', "%$month%")
             ->selectRaw('Shops.shop_id, Shops.shop_name, SUM(OrderDetails.total) as total_sales')
-            ->groupBy('Shops.shop_id')
+            ->groupBy('Shops.shop_id', 'Shops.shop_name')
             ->orderByDesc('total_sales')
             ->take(10)
             ->get();
@@ -73,7 +73,7 @@ class AdminController extends Controller
             ->join('Shops', 'Bookings.shop_id', '=', 'Shops.shop_id')
             ->where('Bookings.purchase_date', 'LIKE', "%$month%")
             ->selectRaw('Shops.shop_id, Shops.shop_name, SUM(OrderDetails.total) as total_sales')
-            ->groupBy('Shops.shop_id')
+            ->groupBy('Shops.shop_id', 'Shops.shop_name')
             ->get();
 
         return view('admin.statistics.shop', [

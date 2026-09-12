@@ -24,7 +24,6 @@ class OrderDetailController extends Controller
         $outfit = ThaiOutfit::with(['categories', 'sizeAndColors.size', 'sizeAndColors.color'])
                             ->findOrFail($idOutfit);
 
-        // dd($booking->first());
         
         return view('orderdetail.index', compact('outfit'));
     }

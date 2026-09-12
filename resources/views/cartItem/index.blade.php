@@ -27,7 +27,7 @@
     @foreach($sortedItems as $cartItem)
         @php
             $key = $cartItem->outfit_id . '-' . $cartItem->size_id . '-' . $cartItem->color_id;
-            $isSelectable = $cartItem->overent == 0 || in_array($key, $inStockMap);
+            $isSelectable = true;
             $reservationDate = $cartItem->reservation_date ? \Carbon\Carbon::parse($cartItem->reservation_date)->startOfDay() : null;
             $isDatePassed = $reservationDate && $reservationDate->lessThan($currentDate);
             $isStockInsufficient = $cartItem->overent == 0 && $cartItem->stockRemaining < $cartItem->quantity;

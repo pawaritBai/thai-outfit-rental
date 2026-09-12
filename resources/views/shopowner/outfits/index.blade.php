@@ -231,10 +231,10 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm text-gray-900">
-                                @if(is_string($outfit->created_at))
+                                @if($outfit->created_at)
                                     {{ \Carbon\Carbon::parse($outfit->created_at)->format('d/m/Y H:i') }}
                                 @else
-                                    {{ $outfit->created_at->format('d/m/Y H:i') }}
+                                    -
                                 @endif
                             </div>
                         </td>

@@ -351,12 +351,12 @@ public function outfitSuggestions($bookingId)
                 // ตรวจสอบว่าเป็นชุดจากร้านเดียวกันหรือไม่
                 if ($selectedOutfit->shop_id == $booking->shop_id) {
                     // กรณีเป็นร้านเดียวกัน
-                    
+                   
                     // ค้นหา OrderDetail ที่มี booking_cycle=2 ที่ต้องการเปลี่ยน
                     $oldOrderDetails = OrderDetail::where('booking_id', $booking->booking_id)
                         ->where('booking_cycle', 2)
                         ->get();
-                    
+                    $originalReservationDate = $oldOrderDetails->first()->reservation_date ?? null;
                     // ลบ OrderDetail เก่าที่มี booking_cycle=2
                     foreach ($oldOrderDetails as $oldDetail) {
                         // ปรับสถานะ CartItem เป็น REMOVED
@@ -379,7 +379,7 @@ public function outfitSuggestions($bookingId)
                     $cartItem->sizeDetail_id = $selection->sizeDetail_id;
                     $cartItem->quantity = $selection->quantity;
                     $cartItem->overent = 0; // ไม่เช่าเกินแล้วเพราะได้ชุดทดแทนแล้ว
-                    $cartItem->reservation_date = $booking->orderDetails()->first()->reservation_date;
+                    $cartItem->reservation_date = $originalReservationDate;
                     $cartItem->status = 'REMOVED'; // กำหนดเป็น REMOVED แทน INUSE
                     $cartItem->created_at = now();
                     $cartItem->purchased_at = now();
@@ -393,7 +393,7 @@ public function outfitSuggestions($bookingId)
                     $orderDetail->booking_id = $booking->booking_id;
                     $orderDetail->cart_item_id = $cartItem->cart_item_id;
                     $orderDetail->created_at = now();
-                    $orderDetail->reservation_date = $booking->orderDetails()->first()->reservation_date;
+                    $orderDetail->reservation_date = $originalReservationDate;
                     $orderDetail->deliveryOptions = 'default'; // กำหนดเป็น default แทน NULL
                     $orderDetail->save();
                     

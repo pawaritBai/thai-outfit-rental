@@ -183,8 +183,9 @@ class OutfitController extends Controller
             $request->file('image')->move(public_path('images/outfits'), $newFilename);
             $validated['image'] = 'images/outfits/' . $newFilename;
         }
-    
+        
         // Create outfit without sizes and colors
+        $validated['created_at'] = now();
         $outfit = ThaiOutfit::create($validated);
         
         foreach ($request->categories as $categoryId) {

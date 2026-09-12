@@ -104,7 +104,7 @@
     // Load Thai address data
     window.onload = async () => {
         try {
-            const res = await fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province_with_amphure_tambon.json');
+            const res = await fetch('/data/thai-address.json');
             
             if (!res.ok) {
                 throw new Error('ไม่สามารถโหลดข้อมูลได้');
@@ -138,8 +138,8 @@
         const provinceId = selectedOption.dataset.id;
         const province = addressData.find(p => p.id == provinceId);
         
-        if (province && province.amphure) {
-            province.amphure.forEach(district => {
+        if (province && province.districts) {
+            province.districts.forEach(district => {
                 const option = document.createElement('option');
                 option.value = district.name_th;
                 option.textContent = district.name_th;
@@ -163,10 +163,10 @@
         const districtId = districtOption.dataset.id;
         
         const province = addressData.find(p => p.id == provinceId);
-        const district = province?.amphure.find(d => d.id == districtId);
+        const district = province?.districts.find(d => d.id == districtId);
         
-        if (district && district.tambon) {
-            district.tambon.forEach(subdistrict => {
+        if (district && district.sub_districts) {
+            district.sub_districts.forEach(subdistrict => {
                 const option = document.createElement('option');
                 option.value = subdistrict.name_th;
                 option.textContent = subdistrict.name_th;

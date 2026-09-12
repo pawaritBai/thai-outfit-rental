@@ -54,7 +54,7 @@
 
     async function loadAddressData() {
         try {
-            const res = await fetch('https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province_with_amphure_tambon.json');
+            const res = await fetch('/data/thai-address.json');
             addressData = await res.json();
 
             addressData.forEach(province => {
@@ -85,7 +85,7 @@
         postalCodeInput.value = '';
 
         const province = addressData.find(p => p.name_th === provinceName);
-        province?.amphure?.forEach(district => {
+        province?.districts?.forEach(district => {
             const opt = document.createElement('option');
             opt.value = district.name_th;
             opt.textContent = district.name_th;
@@ -103,9 +103,9 @@
         postalCodeInput.value = '';
 
         const province = addressData.find(p => p.name_th === provinceName);
-        const district = province?.amphure?.find(d => d.name_th === districtName);
+        const district = province?.districts?.find(d => d.name_th === districtName);
 
-        district?.tambon?.forEach(sub => {
+        district?.sub_districts?.forEach(sub => {
             const opt = document.createElement('option');
             opt.value = sub.name_th;
             opt.textContent = sub.name_th;

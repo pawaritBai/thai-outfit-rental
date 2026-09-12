@@ -10,11 +10,9 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        // เพิ่มการนับจำนวนชุดในแต่ละหมวดหมู่
-        $categories = OutfitCategory::select('OutfitCategories.*')
-            ->leftJoin('ThaiOutfitCategories', 'OutfitCategories.category_id', '=', 'ThaiOutfitCategories.category_id')
-            ->groupBy('OutfitCategories.category_id')
-            ->selectRaw('COUNT(ThaiOutfitCategories.outfit_id) as outfits_count')
+        // เพิ่มการนับจำนวนชุดในแต่ละหมวดหมู่ (ใช้ withCount แทน join+groupBy
+        // เพื่อเลี่ยงปัญหา ONLY_FULL_GROUP_BY ตอน paginate() ครอบ query ด้วย COUNT(*))
+        $categories = OutfitCategory::withCount('outfits')
             ->orderBy('category_name')
             ->paginate(10);
         
