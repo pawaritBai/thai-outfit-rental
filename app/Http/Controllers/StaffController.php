@@ -66,23 +66,24 @@ class StaffController extends Controller
     {
         $userType = Auth::user()->userType;
 
-        $services = SelectService::with(['address','booking.user'])
-            ->leftJoin('SelectStaffDetails as ss', 'SelectServices.select_service_id', '=', 'ss.select_service_id')
-            ->select(
-                'SelectServices.*',
-                DB::raw('COUNT(ss.select_staff_detail_id) as staff_count'),
-                DB::raw('CEIL(SelectServices.customer_count / 3) as required_staff')
+        $services = SelectService::with(['address', 'booking.user'])
+            ->select('SelectServices.*')
+            ->leftJoin(
+                DB::raw('(SELECT select_service_id, COUNT(select_staff_detail_id) as staff_count FROM SelectStaffDetails GROUP BY select_service_id) as ss'),
+                'SelectServices.select_service_id',
+                '=',
+                'ss.select_service_id'
             )
+            ->selectRaw('COALESCE(ss.staff_count, 0) as staff_count')
+            ->selectRaw('CEIL(SelectServices.customer_count / 3) as required_staff')
             ->where('SelectServices.service_type', $userType)
             ->where('SelectServices.reservation_date', '>', now())
-            ->groupBy('SelectServices.select_service_id', 'SelectServices.customer_count')
-            ->havingRaw('staff_count < required_staff')
-            ->whereNull('ss.select_staff_detail_id') // กรองงานที่ยังไม่มีช่างรับ
+            ->where(function ($query) {
+                $query->whereNull('ss.staff_count')
+                    ->orWhereRaw('ss.staff_count < CEIL(SelectServices.customer_count / 3)');
+            })
             ->get();
-            // dd($services,now());
 
-
-        // dd($services);
 
         // คำนวณการแบ่งลูกค้าให้พนักงาน
         foreach ($services as $service) {
